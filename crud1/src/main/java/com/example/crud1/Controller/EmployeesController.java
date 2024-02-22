@@ -30,10 +30,10 @@ public class EmployeesController {
 	@Autowired
 	EmployeeService employeeService;
 	@PostMapping("/api/employees")
-	public ResponseEntity<EmployeesEntity> saveEmployee(@RequestBody EmployeesEntity employeesEntity) {
-	    EmployeesEntity savedEmployee = employeeService.saveEmployee(employeesEntity);
-	    return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
+	public EmployeesEntity saveEmployee(@RequestBody EmployeesEntity employeesEntity) {
+	    return employeeService.saveEmployee(employeesEntity);
 	}
+
 
 	@GetMapping("/api/employees")
 	public List<EmployeesEntity> getAllEmployees() {
