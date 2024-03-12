@@ -1,9 +1,10 @@
 package com.example.crud1.Controller;
 
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,62 +14,60 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.crud1.Entity.EmployeesEntity;
 import com.example.crud1.exception.ExceptionFound;
 import com.example.crud1.service.EmployeeService;
 
 
 import jakarta.validation.Valid;
-
-
-
-
+  
 @RestController
+@RequestMapping("/api/employees")  
 public class EmployeesController {
-	@Autowired
-	EmployeeService employeeService;
-	@PostMapping("/api/employees")
-	public EmployeesEntity saveEmployee(@RequestBody EmployeesEntity employeesEntity) {
-	    return employeeService.saveEmployee(employeesEntity);
-	}
 
+    @Autowired
+    private EmployeeService employeeService;
 
-	@GetMapping("/api/employees")
-	public List<EmployeesEntity> getAllEmployees() {
-		//storing return type of Student Entity
-		return employeeService.getAllEmployees();
-	}
-	@PutMapping("/api/employees/{id}")
-	public ResponseEntity<EmployeesEntity> updateEmployee(@PathVariable(value = "id") Long employeeId,
-	        @Valid @RequestBody EmployeesEntity employeeDetails) throws ExceptionFound {
-	    EmployeesEntity employee = employeeService.getEmployeeById(employeeId)
-	            .orElseThrow(() -> new ExceptionFound("Employee not found for this id :: " + employeeId));
+    @PostMapping
+    public ResponseEntity<EmployeesEntity> CreateEmployee(@RequestBody EmployeesEntity employeesEntity) {
+        EmployeesEntity Employee = employeeService.saveEmployee(employeesEntity);
+        return new ResponseEntity<>(Employee, HttpStatus.CREATED);
+    } 
 
-	    employee.setName(employeeDetails.getName());
-	    final EmployeesEntity updatedEmployee = employeeService.saveEmployee(employee);
+    @GetMapping 
+    public ResponseEntity<List<EmployeesEntity>> getAllEmployees() {
+        List<EmployeesEntity> employeesList = employeeService.getAllEmployees();
+        return new ResponseEntity<>(employeesList, HttpStatus.OK);
+    }
 
-	    return ResponseEntity.ok(updatedEmployee);
-	}
+    @GetMapping("/Name")
+    public ResponseEntity<List<EmployeesEntity>> getEmployeesByName(@RequestParam(name = "name") String name)throws ExceptionFound   {
+        List<EmployeesEntity> employeesList = employeeService.getEmployeesByName(name);
+        if (!employeesList.isEmpty()) {
+            return new ResponseEntity<>(employeesList,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
-	@DeleteMapping("/api/employees/{id}")
-	public Map<Object, Object> deleteEmployee(@PathVariable(value = "id") Long employeeId) throws ExceptionFound {
-	    EmployeesEntity employee = employeeService.getEmployeeById(employeeId)
-	            .orElseThrow(() -> new ExceptionFound("Employee not found for this id :: " + employeeId));
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeesEntity> updateEmployee(@PathVariable(value = "id") Long employeeId, @Valid @RequestBody EmployeesEntity employeeDetails) throws ExceptionFound {
+        EmployeesEntity employee = employeeService.getEmployeeById(employeeId).orElseThrow(() -> new ExceptionFound("Employee not found for this id :: " + employeeId));
+        employee.setName(employeeDetails.getName());
+        employee.setDepartment(employeeDetails.getDepartment()); 
+        employee.setPhoneNumber(employeeDetails.getPhoneNumber());
+        final EmployeesEntity updatedEmployee = employeeService.saveEmployee(employee);
+        return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+    }
 
-	    employeeService.deleteEmployee(employee);
-
-	    Map<Object, Object> response = new HashMap<>();
-	    response.put("deleted", Boolean.TRUE);
-
-	    return response;
-	}
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable(value = "id") Long employeeId) throws ExceptionFound {
+        EmployeesEntity employee = employeeService.getEmployeeById(employeeId).orElseThrow(() -> new ExceptionFound("Employee not found for this id :: " + employeeId));
+        employeeService.deleteEmployee(employee);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
-
-		
-	
-
-

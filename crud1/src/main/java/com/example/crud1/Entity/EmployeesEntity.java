@@ -7,53 +7,52 @@ import jakarta.persistence.Id;
 
 @Entity
 public class EmployeesEntity {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
-	private long PhoneNumber;
-	private String Name;
-	private String Department;
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
-	}
-	public long getPhoneNumber() {
-		return PhoneNumber;
-	}
-	public void setPhoneNumber(long phoneNumber) {
-		PhoneNumber = phoneNumber;
-	}
-	public String getName() {
-		return Name;
-	}
-	public void setName(String name) {
-		Name = name;
-	}
-	public String getDepartment() {
-		return Department;
-	}
-	public void setDepartment(String department) {
-		Department = department;
-	}
-	public EmployeesEntity(long id, long phoneNumber, String name, String department) {
-		super();
-		this.id = id;
-		PhoneNumber = phoneNumber;
-		Name = name;
-		Department = department;
-	}
-	public EmployeesEntity() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	@Override
-	public String toString() {
-		return "EmployeesEntity [id=" + id + ", PhoneNumber=" + PhoneNumber + ", Name=" + Name + ", Department="
-				+ Department + "]";
-	
-	
-	
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    private long phoneNumber; 
+    private String name;      
+    private String department; 
+
+
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+    public long getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public String getName() {
+        return name;
+    }
+  
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getDepartment() {
+        return department;
+    }
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+    public EmployeesEntity(long id, long phoneNumber, String name, String department) {
+        super();
+        this.id = id;
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.department = department;
+    }
+    public EmployeesEntity() {
+        super();
+    }
+    @Override
+    public String toString() {
+        return "EmployeesEntity [id=" + id + ", phoneNumber=" + phoneNumber + ", name=" + name + ", department="
+                + department + "]";
+    }
 }
